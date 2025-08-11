@@ -1,0 +1,121 @@
+claim_id,risk_score,is_outlier,anomaly_reasons
+162,43.12974148153744,True,"Multiple claims history, Statistical outlier in claim amount"
+133,42.19735662868149,True,"Multiple claims history, Statistical outlier in claim amount"
+137,39.99593570532437,False,Multiple claims history
+194,39.86942516463294,False,Multiple claims history
+190,39.85400653905735,False,Multiple claims history
+176,39.818415480501024,False,Multiple claims history
+152,39.7109520667299,False,Multiple claims history
+106,39.68068348350893,False,Multiple claims history
+140,39.32281855465728,False,Multiple claims history
+188,39.01380011354199,False,Multiple claims history
+175,38.657272944921566,False,Multiple claims history
+156,38.176852808207904,False,Multiple claims history
+107,38.0727848104582,False,Multiple claims history
+150,37.985773303318055,False,Multiple claims history
+167,37.760640122784736,False,Multiple claims history
+143,37.76011358715417,False,Multiple claims history
+135,37.654798769257035,False,Multiple claims history
+146,37.22026191509579,False,Multiple claims history
+103,37.01329623723426,False,Multiple claims history
+216,36.79383156460398,False,Multiple claims history
+138,36.765048254956156,False,Multiple claims history
+183,36.35045678183339,False,Multiple claims history
+112,35.81530982985235,False,Multiple claims history
+113,35.730785388693434,False,Multiple claims history
+115,34.983909460736314,False,Multiple claims history
+129,34.48077157313726,False,Multiple claims history
+187,34.39466187171771,False,Multiple claims history
+205,34.37827171246073,False,Multiple claims history
+124,34.33393481879545,False,Multiple claims history
+151,34.01392134652462,False,Multiple claims history
+132,34.00017397180879,False,Multiple claims history
+101,33.9996131197386,False,Multiple claims history
+110,33.988433890968736,False,Multiple claims history
+184,33.681220719562646,False,Multiple claims history
+204,33.369739197408904,False,Multiple claims history
+164,33.26134659975254,False,Multiple claims history
+198,33.152231215844495,False,Multiple claims history
+170,33.09494281516173,False,Multiple claims history
+154,32.26343432941459,False,Multiple claims history
+168,32.25447611444459,False,Multiple claims history
+200,31.822302989730254,False,Multiple claims history
+209,31.818884585054004,False,Multiple claims history
+189,31.692562863536313,False,Multiple claims history
+145,31.58150057854241,False,Multiple claims history
+127,31.503496455466767,False,Multiple claims history
+201,31.47869976921976,False,Multiple claims history
+147,31.31077066919536,False,Multiple claims history
+199,31.276804763653182,False,Multiple claims history
+126,30.950139793199742,False,Multiple claims history
+134,30.939694669158143,False,Multiple claims history
+191,30.650474962761507,False,Multiple claims history
+141,30.590283657784248,False,Multiple claims history
+102,30.447898923805717,False,Multiple claims history
+169,30.02435005373954,False,Multiple claims history
+136,29.904201058736746,False,Multiple claims history
+160,29.80159613932483,False,Multiple claims history
+121,29.676566495706957,False,Multiple claims history
+118,29.468542140707022,False,Multiple claims history
+139,29.412553210033057,False,Multiple claims history
+214,29.257146101534552,False,Multiple claims history
+179,29.019970816796587,False,Multiple claims history
+217,28.953575177884055,False,Multiple claims history
+108,28.808559631858557,False,Multiple claims history
+215,28.755603071354383,False,Multiple claims history
+171,28.69794889380916,False,Multiple claims history
+155,28.607273968414745,False,Multiple claims history
+123,28.56573560522191,False,Multiple claims history
+220,28.527261340802298,False,Multiple claims history
+181,28.505946554889547,False,Multiple claims history
+185,28.297047233100233,False,Multiple claims history
+157,28.086137796789423,False,Multiple claims history
+166,28.06547238191598,False,Multiple claims history
+193,27.52296751668721,False,Multiple claims history
+172,27.284699320276133,False,Multiple claims history
+161,27.276789093922943,False,Multiple claims history
+142,27.011745398013495,False,Multiple claims history
+122,26.79456798148492,False,Multiple claims history
+128,26.554316351706447,False,Multiple claims history
+119,25.88646254714914,False,Multiple claims history
+182,25.6807451803292,False,Multiple claims history
+212,25.679393532684298,False,Multiple claims history
+203,25.157288409497305,False,Multiple claims history
+120,24.90235005437184,False,Multiple claims history
+117,24.392531497362224,False,Multiple claims history
+195,23.970023951425176,False,Multiple claims history
+173,23.888342252215764,False,Multiple claims history
+174,23.84372117185111,False,Multiple claims history
+210,23.525835030647272,False,Multiple claims history
+186,23.048816745382,False,Multiple claims history
+177,21.60235343046621,False,Multiple claims history
+213,21.573110081333574,False,Multiple claims history
+163,21.440911084087897,False,Multiple claims history
+116,21.396293215906695,False,Multiple claims history
+219,21.341643636793417,False,Multiple claims history
+178,21.264102184994954,False,Multiple claims history
+211,21.037188467930967,False,Multiple claims history
+165,20.880372803777036,False,Multiple claims history
+206,20.797607991023714,False,Multiple claims history
+125,20.359985914875427,False,Multiple claims history
+158,20.317094767428284,False,Multiple claims history
+207,18.49269047965435,False,Multiple claims history
+159,18.470446823945753,False,Multiple claims history
+104,17.91185345030377,False,Multiple claims history
+196,17.555677034295393,False,Multiple claims history
+149,17.264078155134616,False,Multiple claims history
+114,17.080287592468263,False,Multiple claims history
+148,16.949034798960586,False,Multiple claims history
+180,15.696263092761209,False,Multiple claims history
+144,14.56575287674959,False,Normal
+111,13.897519331151441,False,Multiple claims history
+197,13.038811632760023,False,Multiple claims history
+109,13.03553141672443,False,Multiple claims history
+130,12.412905260105157,False,Normal
+208,12.225239232153747,False,Normal
+105,11.127070993562757,False,Normal
+153,9.652258261799583,False,Normal
+131,9.554468491195035,False,Normal
+192,6.670350015917431,False,Normal
+202,4.164328169225021,False,Normal
+218,2.685986752568912,False,Normal

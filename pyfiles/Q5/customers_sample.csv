@@ -1,0 +1,51 @@
+customer_id,name,age,email,city,registration_date
+1,Kenneth Davis,56,customer1@email.com,New York,2023-12-30
+2,Deborah Moore,46,customer2@email.com,Los Angeles,2023-07-18
+3,Joseph Rodriguez,60,customer3@email.com,Philadelphia,2022-12-31
+4,Michael Baker,38,customer4@email.com,Philadelphia,2020-05-01
+5,Paul Garcia,36,customer5@email.com,Phoenix,2023-05-23
+6,Helen Williams,28,customer6@email.com,New York,2020-03-28
+7,Jennifer Wilson,70,customer7@email.com,Los Angeles,2023-01-28
+8,Steven Hill,57,customer8@email.com,New York,2020-05-10
+9,Ruth Gonzales,39,customer9@email.com,Philadelphia,2023-08-25
+10,Laura Hall,19,customer10@email.com,Phoenix,2020-12-09
+11,Anthony Anderson,61,customer11@email.com,Houston,2023-12-08
+12,Sharon Moore,55,customer12@email.com,New York,2021-01-20
+13,Timothy Hernandez,38,customer13@email.com,Philadelphia,2023-03-30
+14,Helen Perez,29,customer14@email.com,Chicago,2023-08-30
+15,Elizabeth Wilson,39,customer15@email.com,Chicago,2020-09-09
+16,Michael Garcia,61,customer16@email.com,Houston,2022-05-06
+17,Michael Thompson,66,customer17@email.com,Chicago,2021-04-19
+18,Joshua Taylor,59,customer18@email.com,New York,2021-11-30
+19,George Robinson,33,customer19@email.com,Phoenix,2020-07-08
+20,Linda Harris,64,customer20@email.com,New York,2022-08-15
+21,Ruth Jackson,68,customer21@email.com,Philadelphia,2023-06-21
+22,Michelle White,74,customer22@email.com,Phoenix,2023-02-28
+23,Richard Rivera,54,customer23@email.com,New York,2021-10-08
+24,John Nelson,38,customer24@email.com,Los Angeles,2022-04-20
+25,Dorothy Jackson,56,customer25@email.com,New York,2023-07-21
+26,Joseph Miller,21,customer26@email.com,Houston,2021-08-23
+27,Sarah Robinson,31,customer27@email.com,Philadelphia,2020-08-29
+28,Lisa Hernandez,26,customer28@email.com,Chicago,2023-10-01
+29,Daniel Wilson,70,customer29@email.com,Philadelphia,2022-06-16
+30,Sarah Hall,37,customer30@email.com,Philadelphia,2020-04-01
+31,Laura Jones,64,customer31@email.com,Phoenix,2022-08-13
+32,Kenneth Hernandez,24,customer32@email.com,Phoenix,2023-12-22
+33,George Thomas,25,customer33@email.com,Los Angeles,2020-02-04
+34,Sandra Harris,31,customer34@email.com,Chicago,2023-01-09
+35,Kenneth Hall,53,customer35@email.com,Phoenix,2023-11-12
+36,Joseph Baker,19,customer36@email.com,Chicago,2022-10-18
+37,Dorothy Roberts,23,customer37@email.com,New York,2021-07-19
+38,Joseph Williams,59,customer38@email.com,Chicago,2021-12-03
+39,Betty Moore,35,customer39@email.com,New York,2021-12-30
+40,Susan Torres,61,customer40@email.com,Philadelphia,2020-06-10
+41,Charles Wilson,27,customer41@email.com,Philadelphia,2022-09-22
+42,Donna Sanchez,31,customer42@email.com,Philadelphia,2022-03-26
+43,Sandra Martinez,32,customer43@email.com,Chicago,2021-03-31
+44,William Thomas,31,customer44@email.com,Philadelphia,2023-06-29
+45,Ruth Wright,74,customer45@email.com,Chicago,2020-10-22
+46,Deborah Nguyen,38,customer46@email.com,Houston,2021-12-20
+47,Sharon Sanchez,62,customer47@email.com,Chicago,2020-12-03
+48,Joseph Rodriguez,64,customer48@email.com,Phoenix,2022-12-12
+49,Donna Garcia,41,customer49@email.com,New York,2020-08-04
+50,Linda Martinez,62,customer50@email.com,Philadelphia,2022-11-30
