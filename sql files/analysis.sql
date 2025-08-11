@@ -80,164 +80,71 @@ ORDER BY
 --• high_risk_customers (customers with 2+ fraudulent claims)
 --Use CTEs, window functions, and advanced aggregations. Include proper handling of NULL values.
 
-
-WITH 
--- CTE 1: Calculate each method's SHARE of all detected frauds
--- This CTE calculates key statistics for each detection method.
-fraud_stats AS (
-    SELECT 
-        -- Standardize 'detected_by' by replacing NULL or empty values with 'AUTOMATED_SYSTEM'.
-        CASE 
-            WHEN fd.detected_by IS NULL OR fd.detected_by = '' THEN 'AUTOMATED_SYSTEM'
-            ELSE fd.detected_by 
-        END AS detected_by,
-        -- Count the number of frauds detected by each method.
-        SUM(CASE WHEN fd.is_fraudulent = 'True' THEN 1 ELSE 0 END) AS total_frauds_detected,
-        
-        -- CORRECTED CALCULATION: This now calculates the share of total frauds for each method.
-        -- The denominator is a subquery that gets the total count of ALL fraudulent claims.
-        CASE 
-            -- Prevents division by zero if there are no fraudulent claims at all.
-            WHEN (SELECT COUNT(*) FROM fraud_detection_sample WHERE is_fraudulent = 'True') = 0 THEN 0
-            ELSE ROUND(
-                (SUM(CASE WHEN fd.is_fraudulent = 'True' THEN 1 ELSE 0 END) * 100.0 / 
-                (SELECT COUNT(*) FROM fraud_detection_sample WHERE is_fraudulent = 'True')), 2
-            )
-        END AS fraud_catch_rate
-        
-    FROM fraud_detection_sample fd
-    -- Group the results by the standardized detection method.
-    GROUP BY CASE 
-        WHEN fd.detected_by IS NULL OR fd.detected_by = '' THEN 'AUTOMATED_SYSTEM'
-        ELSE fd.detected_by 
-    END
-),
-
--- CTE 2: Find policy types most susceptible to fraud
--- This CTE counts the number of fraudulent claims for each policy type.
-policy_fraud_stats AS (
-    SELECT 
+-- CTE 1: Create a base table of all confirmed fraudulent claims.
+-- This is the most important simplification. It joins all the tables once
+-- and filters for fraud, so we don't have to repeat these joins in later steps.
+WITH FraudulentClaims AS (
+    SELECT
         p.policy_type,
-        COUNT(*) AS fraud_count
-    FROM policies_sample p
-    INNER JOIN claims_sample c ON p.policy_id = c.policy_id
-    INNER JOIN fraud_detection_sample fd ON c.claim_id = fd.claim_id
-    WHERE fd.is_fraudulent = 'True'
-    GROUP BY p.policy_type
-),
-
--- CTE 3: Get the most fraud-prone policy type
--- This selects the single policy type with the highest fraud count from the previous CTE.
-top_fraud_policy AS (
-    SELECT policy_type
-    FROM policy_fraud_stats
-    ORDER BY fraud_count DESC
-    LIMIT 1
-),
-
--- CTE 4: Identify customers with 2+ fraudulent claims
--- This finds customers who have had two or more fraudulent claims.
-high_risk_customers AS (
-    SELECT 
         p.customer_id,
-        COUNT(*) as fraud_count
-    FROM policies_sample p
-    INNER JOIN claims_sample c ON p.policy_id = c.policy_id
-    INNER JOIN fraud_detection_sample fd ON c.claim_id = fd.claim_id
+        c.claim_amount,
+        fd.detection_date,
+        -- Standardize the 'detected_by' field, handling NULL or empty values.
+        COALESCE(NULLIF(fd.detected_by, ''), 'AUTOMATED_SYSTEM') AS detected_by
+    FROM claims_sample c
+    JOIN policies_sample p ON c.policy_id = p.policy_id
+    JOIN fraud_detection_sample fd ON c.claim_id = fd.claim_id
     WHERE fd.is_fraudulent = 'True'
-    GROUP BY p.customer_id
-    HAVING COUNT(*) >= 2
-    ORDER BY p.customer_id
 ),
 
--- CTE 5: Calculate average fraud amounts by detection method
--- This calculates the average claim amount for frauds caught by each detection method.
-avg_fraud_amounts AS (
-    SELECT 
-        CASE 
-            WHEN fd.detected_by IS NULL OR fd.detected_by = '' THEN 'AUTOMATED_SYSTEM'
-            ELSE fd.detected_by 
-        END AS detected_by,
-        ROUND(AVG(c.claim_amount), 2) AS avg_fraud_amount
-    FROM fraud_detection_sample fd
-    INNER JOIN claims_sample c ON fd.claim_id = c.claim_id
-    WHERE fd.is_fraudulent = 'True'
-    GROUP BY CASE 
-        WHEN fd.detected_by IS NULL OR fd.detected_by = '' THEN 'AUTOMATED_SYSTEM'
-        ELSE fd.detected_by 
-    END
-),
-
--- CTE 6: Monthly fraud trend for 2024
--- This aggregates the number of fraudulent claims for each month in 2024.
-monthly_fraud_2024 AS (
-    SELECT 
-        DATE_FORMAT(fd.detection_date, '%Y-%m') AS month_year,
-        SUM(CASE WHEN fd.is_fraudulent = 'True' THEN 1 ELSE 0 END) AS fraud_count
-    FROM fraud_detection_sample fd
-    WHERE YEAR(fd.detection_date) = 2024
-    GROUP BY DATE_FORMAT(fd.detection_date, '%Y-%m')
-    ORDER BY month_year
-),
-
--- CTE 7: Create complete month series for 2024
--- This creates a reference table of all 12 months in 2024 to ensure no months are missed in the final report.
-all_months_2024 AS (
-    SELECT '2024-01' as month_year UNION ALL SELECT '2024-02' UNION ALL SELECT '2024-03' UNION ALL
-    SELECT '2024-04' UNION ALL SELECT '2024-05' UNION ALL SELECT '2024-06' UNION ALL
-    SELECT '2024-07' UNION ALL SELECT '2024-08' UNION ALL SELECT '2024-09' UNION ALL
-    SELECT '2024-10' UNION ALL SELECT '2024-11' UNION ALL SELECT '2024-12'
-),
-
--- CTE 8: Complete monthly trend with zeros
--- This joins the actual monthly fraud counts with the complete list of months, filling in 0 for months with no fraud.
-complete_monthly_trend AS (
-    SELECT 
-        am.month_year,
-        COALESCE(mf.fraud_count, 0) as fraud_count
-    FROM all_months_2024 am
-    LEFT JOIN monthly_fraud_2024 mf ON am.month_year = mf.month_year
-    ORDER BY am.month_year
-),
-
--- CTE 9: Get high-risk customer list
--- This compiles the list of high-risk customer IDs into a single comma-separated string.
-high_risk_list AS (
-    SELECT GROUP_CONCAT(customer_id ORDER BY customer_id SEPARATOR ',') AS customer_list
-    FROM high_risk_customers
-),
-
--- CTE 10: Get monthly trend string
--- This formats the complete monthly trend data into the final string format (e.g., '2024-01:0;2024-02:1').
-trend_string AS (
-    SELECT GROUP_CONCAT(
-        CONCAT(month_year, ':', fraud_count) 
-        ORDER BY month_year 
-        SEPARATOR ';'
-    ) AS monthly_trend
-    FROM complete_monthly_trend
+-- CTE 2: Calculate all statistics related to the detection methods.
+-- This combines several of your original CTEs into one.
+DetectionMethodStats AS (
+    SELECT
+        detected_by,
+        COUNT(*) AS total_frauds_detected,
+        ROUND(AVG(claim_amount), 2) AS avg_fraud_amount,
+        -- Calculate the share of total frauds found by this method.
+        ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM FraudulentClaims), 2) AS fraud_catch_rate
+    FROM FraudulentClaims
+    GROUP BY detected_by
 )
 
--- Final query - get the detection method with highest fraud catch rate
--- This assembles the final single-row report from all the previous CTEs.
-SELECT 
-    fs.detected_by AS detection_method,
-    fs.total_frauds_detected,
-    fs.fraud_catch_rate,
-    tfp.policy_type AS most_fraud_prone_policy_type,
-    afa.avg_fraud_amount,
-    hrl.customer_list AS high_risk_customers,
-    ts.monthly_trend AS monthly_fraud_trend_2024
-FROM fraud_stats fs
--- CROSS JOIN is used for CTEs that produce a single row of summary data.
-CROSS JOIN top_fraud_policy tfp
--- LEFT JOIN is used to connect the average fraud amount to its corresponding detection method.
-LEFT JOIN avg_fraud_amounts afa ON fs.detected_by = afa.detected_by
-CROSS JOIN high_risk_list hrl
-CROSS JOIN trend_string ts
--- This WHERE clause filters the final result to only show the method(s) with the highest catch rate.
-WHERE fs.fraud_catch_rate = (
-    SELECT MAX(fraud_catch_rate) FROM fraud_stats
-)
--- Order the results for consistency.
-ORDER BY fs.fraud_catch_rate DESC, fs.total_frauds_detected DESC;
+-- Final Query: Select from the main stats and use subqueries for the rest.
+-- This structure avoids the need for many separate CTEs for formatting.
+SELECT
+    dms.detected_by AS detection_method,
+    dms.total_frauds_detected,
+    dms.fraud_catch_rate,
+    dms.avg_fraud_amount,
+
+    -- Subquery to get the most fraud-prone policy type.
+    (SELECT policy_type FROM FraudulentClaims GROUP BY policy_type ORDER BY COUNT(*) DESC LIMIT 1) AS most_fraud_prone_policy_type,
+
+    -- Subquery to get the comma-separated list of high-risk customers.
+    (SELECT GROUP_CONCAT(customer_id ORDER BY customer_id)
+     FROM (SELECT customer_id FROM FraudulentClaims GROUP BY customer_id HAVING COUNT(*) >= 2) AS high_risk_subquery
+    ) AS high_risk_customers,
+
+    -- Subquery to generate the complete monthly trend string for 2024.
+    (SELECT GROUP_CONCAT(CONCAT(m.month_year, ':', COALESCE(f.fraud_count, 0)) ORDER BY m.month_year SEPARATOR ';')
+     FROM (
+         -- Create a reference table of all 12 months in 2024.
+         SELECT '2024-01' as month_year UNION ALL SELECT '2024-02' UNION ALL SELECT '2024-03' UNION ALL
+         SELECT '2024-04' UNION ALL SELECT '2024-05' UNION ALL SELECT '2024-06' UNION ALL
+         SELECT '2024-07' UNION ALL SELECT '2024-08' UNION ALL SELECT '2024-09' UNION ALL
+         SELECT '2024-10' UNION ALL SELECT '2024-11' UNION ALL SELECT '2024-12'
+     ) AS m
+     -- Join the actual fraud counts, filling in 0 for months with no fraud.
+     LEFT JOIN (
+         SELECT DATE_FORMAT(detection_date, '%Y-%m') AS month_year, COUNT(*) AS fraud_count
+         FROM FraudulentClaims
+         WHERE YEAR(detection_date) = 2024
+         GROUP BY month_year
+     ) AS f ON m.month_year = f.month_year
+    ) AS monthly_fraud_trend_2024
+
+FROM DetectionMethodStats dms
+-- Filter to only show the detection method with the highest catch rate.
+WHERE dms.fraud_catch_rate = (SELECT MAX(fraud_catch_rate) FROM DetectionMethodStats)
+ORDER BY dms.fraud_catch_rate DESC, dms.total_frauds_detected DESC;
