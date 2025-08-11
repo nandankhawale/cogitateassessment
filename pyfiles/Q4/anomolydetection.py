@@ -1,3 +1,16 @@
+"""
+Insurance Claims Anomaly Detection & Risk Scoring.
+Description:
+This script performs an end-to-end analysis of insurance claims data. It loads
+data from local CSV files, preprocesses it, identifies statistical outliers
+using the IQR method, and calculates a composite risk score for each claim
+based on multiple business-driven factors.
+
+The final output is a CSV report ('claims_anomaly_report.csv') .
+"""
+
+
+
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -7,6 +20,10 @@ from datetime import datetime
 #Loading data
 # This function loads the data from CSV files and handles exceptions
 def load_data():
+    """Loads the customers, policies, and claims data from CSV files.
+
+    This function attempts to read the required sample CSV files into pandas
+    DataFrames. It includes error handling for cases where files are not found."""
     try:
         customers_df = pd.read_csv("customers_sample.csv")
         policies_df = pd.read_csv("policies_sample.csv")
@@ -20,6 +37,10 @@ def load_data():
 # Preprocessing data
 # This function preprocesses the data by filling missing values and converting date columns
 def preprocess_data(df):
+    """Performs basic preprocessing on the merged DataFrame.
+
+    This includes filling any missing numerical values with 0 and converting
+    any columns with 'date' in their name to datetime objects."""
     df = df.copy()
     df.fillna(0, inplace=True)
     for col in df.columns:
@@ -32,6 +53,8 @@ def preprocess_data(df):
 # Detecting outliers using IQR method
 # This function detects outliers in the claim amounts based on the IQR method
 def detect_outliers_iqr(df):
+
+    """Detects statistical outliers in claim amounts using the IQR method."""
     df = df.copy()
     df["is_outlier"] = False
     for ptype in df["policy_type"].unique():
@@ -115,6 +138,7 @@ def calculate_risk_scores(df):
 
 
 def process_claims():
+    """Main function to orchestrate the claims processing pipeline."""
     customers_df, policies_df, claims_df = load_data()
 
     df = claims_df.merge(policies_df, on="policy_id", how="left")
